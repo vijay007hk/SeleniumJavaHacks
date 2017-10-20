@@ -58,8 +58,10 @@ package firstPackage;
 
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.logging.Logger;
@@ -92,41 +94,44 @@ import org.openqa.selenium.chrome.ChromeDriver;
 public class FirstClass {
 
 	static DesiredCapabilities ds = DesiredCapabilities.firefox();
-	static FirefoxDriver idriver = new FirefoxDriver(ds);
-	static ChromeDriver cdriver = new ChromeDriver();
-
-	public static void main(String[] vijay) throws InterruptedException, WebDriverException, IOException, NoAlertPresentException {
+	
+	 static{System.setProperty("webdriver.gecko.driver", "C:\\geckodriver\\geckodriver.exe");}
+	 static FirefoxDriver idriver = new FirefoxDriver(ds);
+	 static {System.setProperty("webdriver.chrome.driver", "C:\\chromedriver\\chromedriver.exe");}
+	 static ChromeDriver cdriver = new ChromeDriver();
+	 public static void main(String[] args) throws InterruptedException, WebDriverException, IOException, NoAlertPresentException {
 		ds.setCapability(FirefoxDriver.PROFILE, false);
 		ds.setPlatform(Platform.ANY);
 		ds.setVersion("");
-		
-		System.setProperty("webdriver.gecko.driver", "C:\\geckodriver\\geckodriver.exe");
+				
 		//System.setProperty("webdriver.ie.driver", "C:\\IEDriverServer_x64_3.4.0\\IEDriverServer.exe");
-		System.setProperty("webdriver.chrome.driver", "C:\\chromedriver\\chromedriver.exe");
+		
 		String url = "http://www.facebook.com";
 
 		//idriver.INITIAL_BROWSER_URL.replaceAll(".*", "www.facebook.com");
 		Wait wait = new FluentWait<FirefoxDriver>(idriver).withTimeout(15, TimeUnit.SECONDS).
 				pollingEvery(5, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
 		idriver.manage().timeouts().implicitlyWait(10L, java.util.concurrent.TimeUnit.SECONDS);
-		cdriver.manage().timeouts().implicitlyWait(10L, java.util.concurrent.TimeUnit.SECONDS);
+		idriver.manage().timeouts().implicitlyWait(10L, java.util.concurrent.TimeUnit.SECONDS);
 		
-		//ChromeDriver cdriver = new ChromeDriver();
+		//ChromeDriver idriver = new ChromeDriver();
 		idriver.get(url);
 		cdriver.get("file:///C:/Users/VIJAY%20HK/Desktop/chkbox.html");
 		idriver.manage().timeouts().pageLoadTimeout(12, TimeUnit.SECONDS);
-		//cdriver.manage().timeouts().pageLoadTimeout(12, TimeUnit.SECONDS);
+		//idriver.manage().timeouts().pageLoadTimeout(12, TimeUnit.SECONDS);
 
 		java_Script();
 		title_navigate();
 		xpath_Functions();
 		xpath_Axes();
 		check_alignments();
-		
-
-		//idriver.close();
-		idriver.quit();
+        Set cookie = idriver.manage().getCookies();
+        Iterator cit = cookie.iterator();
+        while(cit.hasNext()){
+        	System.out.println("Cookies : " + cit.next());
+        }
 		cdriver.quit();
+		idriver.quit();
 	}
 
 	//*************************************************
@@ -134,11 +139,13 @@ public class FirstClass {
 		///
 		/// xpath functions
 		///
+		
 		try{
 			WebElement last = cdriver.findElement(By.xpath("//input[@type='checkbox'][last()]"));
 			WebElement lastbut3 = cdriver.findElement(By.xpath("//input[@type='checkbox'][last()-3]"));
 			WebElement position3 = cdriver.findElement(By.xpath("//input[@type='checkbox'][position()=4]"));
 			WebElement countelm = cdriver.findElement(By.xpath("//input[@type='checkbox'][count(//input[@name='chk'])]"));
+			System.out.println("Xpathname() "+By.xpath("name(/input)"));
 			WebElement predicate2 = cdriver.findElement(By.xpath("//input[@type='checkbox'][2]"));
 			WebElement textbox = cdriver.findElement(By.xpath("//input[substring(@id, string-length(@id)-3)='pdr0']"));
 			WebElement textbox2 = cdriver.findElement(By.xpath("//input[substring-after(@id, 'p1:pdr0')]"));
@@ -158,7 +165,7 @@ public class FirstClass {
 			System.out.println("POSITION function" + e);
 		}
 		try{
-			WebElement nextelm = idriver.findElement(By.xpath("//a[starts-with(@title,'Click for')]"));
+			WebElement nextelm = cdriver.findElement(By.xpath("//a[starts-with(@title,'Click for')]"));
 			WebElement credio = cdriver.findElement(By.xpath("//input[contains(@id,'fixed')]"));
 			nextelm.click();
 			credio.click();
@@ -172,6 +179,7 @@ public class FirstClass {
 		///
 		/// xpath axes
 		///
+		
 		try{
 			List<WebElement> children = idriver.findElements(By.xpath("//span[@class='_5k_2 _5dba']/child::*"));
 			List<WebElement> desc = idriver.findElements(By.xpath("//span[@id='u_0_u']/descendant::*"));
@@ -198,6 +206,7 @@ public class FirstClass {
 	}
 
 	public static void java_Script() throws InterruptedException{
+		
 		try
 		{
 			((JavascriptExecutor)idriver).executeScript("alert('Welcome to Facebook');"
@@ -216,7 +225,7 @@ public class FirstClass {
 
 	public static void title_navigate(){
 		String expectedTitle = "Facebook .* log in or sign up";
-
+		
 		String actualTitle = idriver.getTitle();
 		try{
 			if(actualTitle.matches(expectedTitle)) {
@@ -248,6 +257,7 @@ public class FirstClass {
 	
 	public static void check_alignments(){
 		//Position/alignment/attributes...
+		
 		WebElement email = idriver.findElement(By.id("email"));
 		WebElement emailLabel = idriver.findElement
 				(By.xpath("//*[@id='login_form']/table/tbody/tr[1]/td[1]/label"));

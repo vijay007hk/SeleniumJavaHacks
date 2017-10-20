@@ -6,7 +6,7 @@ public class StringDups {
 		// TODO Auto-generated method stub
         String s = "Java is called Java because java of Java";
         String[] arr = s.split(" ");
-        int count=0;
+        int count=1;
         
         for(int i=0; i<arr.length-1; i++){
         	for(int j=i+1; j<arr.length; j++){
@@ -18,7 +18,7 @@ public class StringDups {
         		}
         		
         	}
-        }System.out.println(count+1);
+        }System.out.println(count);
 	}
 
 }
